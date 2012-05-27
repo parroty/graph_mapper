@@ -6,5 +6,5 @@ Gem::Specification.new do |s|
 
   s.authors     = ['parroty']
   s.email       = 'parroty00@gmail.com'
-  s.homepage    = 'www.example.com'
+  s.homepage    = 'http://www.example.com'
 end
