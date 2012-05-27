@@ -82,7 +82,7 @@ private
   end
 
   def get_data_with_default_format(record)
-    { :key => Date.strptime(record.key, "%Y/%m/%d"), :value => record.value.to_i }
+    { :key => Date.strptime(record.key, DEFAULT_OPTIONS[:date_format]), :value => record.value.to_i }
   end
 
   def accumulate_data_items(records, start_date, end_date, block)
