@@ -14,8 +14,9 @@ module GraphMapper
       date + 7
     end
 
+    # return SAT, as last day of the week (starting from SUN)
     def self.get_baseline_date(date)
-      date - date.wday
+      date + (6 - date.wday)
     end
   end
 
@@ -24,8 +25,9 @@ module GraphMapper
       date >> 1
     end
 
+    # return last day of the month
     def self.get_baseline_date(date)
-      date - date.mday + 1
+      (date >> 1) - date.day
     end
   end
 end
