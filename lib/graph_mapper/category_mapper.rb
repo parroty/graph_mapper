@@ -4,19 +4,11 @@ module GraphMapper
 
 class CategoryMapper
   def initialize(records, start_date, end_date, options = nil, &block)
-    category_hash = {}
-    records.each do |record|
-      if category_hash[record.category]
-        category_hash[record.category] << record
-      else
-        category_hash[record.category] = [record]
-      end
-    end
-
     @mappers = {}
+    category_hash = classify_records_by_category(records)
     category_hash.each do | category, records |
        @mappers[category] = Mapper.new(records, start_date, end_date, options, &block)
-     end
+    end
   end
 
   def mapper(category)
@@ -41,6 +33,16 @@ class CategoryMapper
     result
   end
 
+private
+  def classify_records_by_category(records)
+    hash = {}
+    records.each do | record |
+      key = record.category
+      hash[key] ||= []
+      hash[key] << record
+    end
+    hash
+  end
 end # class
 
 end # module
