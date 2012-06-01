@@ -1,5 +1,6 @@
 require 'date'
 require 'graph_mapper'
+require 'active_support/all'
 
 class Stat; end
 
@@ -108,6 +109,41 @@ describe "GraphMapper" do
         m.count.should  == 4
         m.keys.should   == ["2012/04/01", "2012/04/02", "2012/04/03", "2012/04/04"]
         m.values.should == {"A" => [10, 0, 0, 30], "B" => [10, 0, 0, 0], "C" => [0, 0, 20, 0]}
+      end
+    end
+
+    context "TimeWithZone" do
+      it "should calc with TimeWithZone records" do
+        Time.zone = 'Tokyo'
+        apr1 = Time.zone.local(2012, 4, 1, 0, 0, 0)
+        apr3 = Time.zone.local(2012, 4, 3, 0, 0, 0)
+        apr4 = Time.zone.local(2012, 4, 4, 0, 0, 0)
+
+        create_stats([[apr1, 10], [apr1, 10], [apr3, 20], [apr4, 30]])
+
+        m = GraphMapper::Mapper.new(Stat.all, "2012/4/1", "2012/4/5") do | record |
+          { :key => record.key, :value => record.value.to_i }
+        end
+
+        m.count.should  == 4
+        m.keys.should   == ["2012/04/01", "2012/04/02", "2012/04/03", "2012/04/04"]
+        m.values.should == [20, 0, 20, 30]
+      end
+
+      it "should calc with TimeWithZone range" do
+        Time.zone = 'Tokyo'
+        apr1 = Time.zone.local(2012, 4, 1, 0, 0, 0)
+        apr5 = Time.zone.local(2012, 4, 5, 0, 0, 0)
+
+        create_stats([["2012/4/1", 10], ["2012/4/1", 10], ["2012/4/3", 20], ["2012/4/4", 30]])
+
+        m = GraphMapper::Mapper.new(Stat.all, apr1, apr5) do | record |
+          { :key => record.key, :value => record.value.to_i }
+        end
+
+        m.count.should  == 4
+        m.keys.should   == ["2012/04/01", "2012/04/02", "2012/04/03", "2012/04/04"]
+        m.values.should == [20, 0, 20, 30]
       end
     end
   end

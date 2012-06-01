@@ -1,4 +1,5 @@
 require 'graph_mapper/dates'
+require 'active_support/all'
 
 module GraphMapper
 
@@ -76,6 +77,8 @@ private
       MIN_DATE
     elsif date.is_a?(String)
       Date.parse(date)
+    elsif date.is_a?(ActiveSupport::TimeWithZone)
+      date.localtime.to_date
     else
       date
     end
@@ -94,6 +97,8 @@ private
       else
         item = get_data_with_default_format(record)
       end
+
+      item[:key] = normalize_date(item[:key])
 
       base_date, value = get_baseline_date(item[:key]), item[:value]
       items[base_date] += value if is_effective_date?(base_date, start_date, end_date)
