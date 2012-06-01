@@ -4,6 +4,10 @@ module GraphMapper
       date + 1
     end
 
+    def self.decrement(date)
+      date - 1
+    end
+
     def self.get_baseline_date(date)
       date
     end
@@ -12,6 +16,10 @@ module GraphMapper
   class WeeklyMapper
     def self.increment(date)
       date + 7
+    end
+
+    def self.decrement(date)
+      date - 7
     end
 
     # return sunday
@@ -23,6 +31,10 @@ module GraphMapper
   class MonthlyMapper
     def self.increment(date)
       date >> 1
+    end
+
+    def self.decrement(date)
+      date >> -1
     end
 
     # return first day of the month
