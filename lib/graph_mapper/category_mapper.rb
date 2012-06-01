@@ -17,12 +17,12 @@ class CategoryMapper
 
   # TODO : which one of the mappers should be returned?
   def count
-    @mappers.length > 0 ? @mappers.values.first.count : nil
+    @mappers.length > 0 ? @mappers.values.first.count : 0
   end
 
   # TODO : which one of the mappers should be returned?
   def keys
-    @mappers.length > 0 ? @mappers.values.first.keys : nil
+    @mappers.length > 0 ? @mappers.values.first.keys : []
   end
 
   def values

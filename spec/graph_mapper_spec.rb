@@ -98,6 +98,18 @@ describe "GraphMapper" do
       m.values.should == [20, 0, 20, 30]
     end
 
+    it "should calc with null records - mapper" do
+      Stat.stub(:all).and_return([])
+
+      m = GraphMapper::Mapper.new(Stat.all, "2012/4/1", "2012/4/5") do | record |
+        hash_for_stats(record)
+      end
+
+      m.count.should  == 4
+      m.keys.should   == ["2012/04/01", "2012/04/02", "2012/04/03", "2012/04/04"]
+      m.values.should == [0, 0, 0, 0]
+    end
+
     context "CategoryMapper" do
       it "should calc with multiple categories" do
         create_stats([["2012/4/1", 10, "A"], ["2012/4/1", 10, "B"], ["2012/4/3", 20, "C"], ["2012/4/4", 30, "A"]])
@@ -109,6 +121,18 @@ describe "GraphMapper" do
         m.count.should  == 4
         m.keys.should   == ["2012/04/01", "2012/04/02", "2012/04/03", "2012/04/04"]
         m.values.should == {"A" => [10, 0, 0, 30], "B" => [10, 0, 0, 0], "C" => [0, 0, 20, 0]}
+      end
+
+      it "should calc with empty records" do
+        Stat.stub(:all).and_return([])
+
+        m = GraphMapper::CategoryMapper.new(Stat.all, "2012/4/1", "2012/4/5") do | record |
+          { :key => Date.strptime(record.key, "%Y/%m/%d"), :value => record.value.to_i, :category => record.category }
+        end
+
+        m.count.should  == 0
+        m.keys.should   == []
+        m.values.should == {}
       end
     end
 
