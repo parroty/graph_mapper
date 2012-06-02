@@ -98,17 +98,18 @@ private
         item = get_data_with_default_format(record)
       end
 
-      item[:key] = normalize_date(item[:key])
+      date  = normalize_date(item[:key])
+      value = item[:value]
 
-      base_date, value = get_baseline_date(item[:key]), item[:value]
-      items[base_date] += value if is_effective_date?(base_date, start_date, end_date)
+      base_date = get_baseline_date(date)
+      items[base_date] += value if is_effective_date?(date, start_date, end_date)
     end
 
     items
   end
 
-  def is_effective_date?(base_date, start_date, end_date)
-    get_baseline_date(start_date) <= base_date and base_date < get_baseline_date(end_date)
+  def is_effective_date?(date, start_date, end_date)
+    start_date <= date and date < end_date
   end
 
   def get_baseline_date(date)

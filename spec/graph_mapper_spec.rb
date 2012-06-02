@@ -52,13 +52,13 @@ describe "GraphMapper" do
       create_stats([["2012/4/1", 10], ["2012/4/2", 20], ["2012/5/9", 30], ["2012/5/14", 40]])
 
       options = { :span_type => GraphMapper::SPAN_MONTHLY }
-      m = GraphMapper::Mapper.new(Stat.all, "2012/4/1", "2012/6/1", options ) do | record |
+      m = GraphMapper::Mapper.new(Stat.all, "2012/4/1", "2012/6/10", options ) do | record |
         hash_for_stats(record)
       end
 
-      m.count.should  == 2
-      m.keys.should   == ["2012/04/01", "2012/05/01"]
-      m.values.should == [30, 70]
+      m.count.should  == 3
+      m.keys.should   == ["2012/04/01", "2012/05/01", "2012/06/01"]
+      m.values.should == [30, 70, 0]
     end
 
     it "should sum all up until specified date (weekly)" do
