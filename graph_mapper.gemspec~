@@ -7,6 +7,4 @@ Gem::Specification.new do |s|
   s.authors     = ['parroty']
   s.email       = 'parroty00@gmail.com'
   s.homepage    = 'http://www.example.com'
-
-  s.add_dependency 'gruff'
 end
