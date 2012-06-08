@@ -9,4 +9,5 @@ Gem::Specification.new do |s|
   s.homepage    = 'http://www.example.com'
 
   s.add_dependency 'gruff'
+  s.add_dependency 'lazy_high_charts'
 end
