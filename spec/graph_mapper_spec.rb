@@ -4,7 +4,7 @@ require 'active_support/all'
 
 class Stat; end
 
-describe "GraphMapper" do
+describe "Mapper" do
   context "test with Stat" do
     def hash_for_stats(record)
       { :key => Date.strptime(record.key, "%Y/%m/%d"), :value => record.value.to_i }
@@ -23,15 +23,17 @@ describe "GraphMapper" do
     end
 
     it "should calc with daily data" do
-      create_stats([["2012/4/1", 10], ["2012/4/1", 10], ["2012/4/3", 20], ["2012/4/4", 30]])
+      create_stats([["2012/4/1", 10], ["2012/4/1", 10], ["2012/4/3", 20], ["2012/4/4", 40]])
 
       m = GraphMapper::Mapper.new(Stat.all, "2012/4/1", "2012/4/5") do | record |
         hash_for_stats(record)
       end
 
-      m.count.should  == 4
-      m.keys.should   == ["2012/04/01", "2012/04/02", "2012/04/03", "2012/04/04"]
-      m.values.should == [20, 0, 20, 30]
+      m.count.should     == 4
+      m.keys.should      == ["2012/04/01", "2012/04/02", "2012/04/03", "2012/04/04"]
+      m.values.should    == [20, 0, 20, 40]
+      m.average.should   == 20
+      m.variation.should == [1.0, 0.0, 1.0, 2.0]
     end
 
     it "should calc with weekly data" do

@@ -36,6 +36,16 @@ class Mapper
     @items.map { |key,val| val }
   end
 
+  def average
+    total = values.inject(0) { |sum,value| sum + value }
+    total.to_f / values.size
+  end
+
+  def variation
+    ave = average()
+    values.map { |val| val.to_f / ave }
+  end
+
 private
   def fill_data_gap(items, start_date, end_date)
     current = get_baseline_date(start_date)
