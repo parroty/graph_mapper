@@ -8,12 +8,12 @@ class Highchart
     @subtitle = options[:subtitle]
     @interval = options[:tick_interval] || 2
 
-    create_chart
+    create_default_chart
   end
 
-  def data(name, list)
-    @chart.xAxis(:categories => list[:key], :tickInterval => @interval)
-    @chart.series(:name => name, :yAxis => 0, :data => list[:value], :animation => false)
+  def data(hash)
+    @chart.xAxis(:categories => hash[:key], :tickInterval => @interval)
+    @chart.series(:name => hash[:name], :yAxis => 0, :data => hash[:value], :animation => false)
   end
 
   def get_charts
@@ -21,7 +21,7 @@ class Highchart
   end
 
 private
-  def create_chart
+  def create_default_chart
     @chart = LazyHighCharts::HighChart.new('graph') do |f|
       f.title(:text => @title)
       f.subtitle(:text => @subtitle)
