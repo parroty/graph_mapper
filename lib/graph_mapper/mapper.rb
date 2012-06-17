@@ -108,11 +108,10 @@ private
         item = get_data_with_default_format(record)
       end
 
-      date  = normalize_date(item[:key])
-      value = item[:value]
-
-      base_date = get_baseline_date(date)
-      items[base_date] += value if is_effective_date?(date, start_date, end_date)
+      date = normalize_date(item[:key])
+      if is_effective_date?(date, start_date, end_date)
+        items[get_baseline_date(date)] += item[:value]
+      end
     end
 
     items
