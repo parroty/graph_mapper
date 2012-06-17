@@ -112,6 +112,34 @@ describe "Mapper" do
       m.values.should == [0, 0, 0, 0]
     end
 
+    context "Options" do
+      before do
+        create_stats([["2012/3/30", 10], ["2012/3/31", 20],
+                      ["2012/4/1", 30], ["2012/4/2", 40], ["2012/4/3", 50], ["2012/4/4", 60]])
+      end
+
+      it "should calc with moving average (success)" do
+        options = { :moving_average_length => 3 }
+        m = GraphMapper::Mapper.new(Stat.all, "2012/4/1", "2012/4/5", options) do | record |
+          hash_for_stats(record)
+        end
+
+        m.count.should    == 4
+        m.keys.should     == ["2012/04/01", "2012/04/02", "2012/04/03", "2012/04/04"]
+        m.values.should   == [30, 40, 50, 60]
+        m.average.should  == 45
+        m.moving_average.should == [20, 30, 40, 50]
+      end
+
+      it "should calc with moving average (error)" do
+        m = GraphMapper::Mapper.new(Stat.all, "2012/4/1", "2012/4/5") do | record |
+          hash_for_stats(record)
+        end
+
+        lambda { m.moving_average }.should raise_error
+      end
+    end
+
     context "CategoryMapper" do
       it "should calc with multiple categories" do
         create_stats([["2012/4/1", 10, "A"], ["2012/4/1", 10, "B"], ["2012/4/3", 20, "C"], ["2012/4/4", 30, "A"]])

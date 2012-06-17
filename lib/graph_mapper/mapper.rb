@@ -21,6 +21,10 @@ class Mapper
       items = add_offsets(items, base_offset)
     end
 
+    if @options[:moving_average_length]
+      @moving_average = calc_moving_average(@records, @start_date, items, @options[:moving_average_length], block)
+    end
+
     @items = items.sort
   end
 
@@ -36,9 +40,12 @@ class Mapper
     @items.map { |key,val| val }
   end
 
+  def moving_average
+    @moving_average or raise "moving average is not initialized"
+  end
+
   def average
-    total = values.inject(0) { |sum,value| sum + value }
-    total.to_f / values.size
+    calc_average(values())
   end
 
   def variation
@@ -123,6 +130,24 @@ private
 
   def get_baseline_date(date)
     @options[:span_type].get_baseline_date(date)
+  end
+
+  def calc_moving_average(records, start_date, items, average_length, block)
+    beginning_date = start_date
+    average_length.times { beginning_date = @options[:span_type].decrement(beginning_date) }
+
+    records_for_average  = accumulate_data_items(records, beginning_date, start_date, block).values + items.values
+
+    moving_average = []
+    items.length.times do | index |
+      moving_average << calc_average(records_for_average[index, average_length])
+    end
+    moving_average
+  end
+
+  def calc_average(items)
+    total = items.inject(0) { |sum,value| sum + value }
+    total.to_f / items.size
   end
 
 end # class
