@@ -133,10 +133,8 @@ private
   end
 
   def calc_moving_average(records, start_date, items, average_length, block)
-    beginning_date = start_date
-    average_length.times { beginning_date = @options[:span_type].decrement(beginning_date) }
-
-    records_for_average  = accumulate_data_items(records, beginning_date, start_date, block).values + items.values
+    beginning_date = @options[:span_type].multiple_decrement(start_date, average_length)
+    records_for_average = accumulate_data_items(records, beginning_date, start_date, block).values + items.values
 
     moving_average = []
     items.length.times do | index |

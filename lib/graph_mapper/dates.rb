@@ -1,5 +1,17 @@
 module GraphMapper
-  class DailyMapper
+  class DateMapper
+    def self.multiple_increment(date, count)
+      count.times { date = increment(date) }
+      date
+    end
+
+    def self.multiple_decrement(date, count)
+      count.times { date = decrement(date) }
+      date
+    end
+  end
+
+  class DailyMapper < DateMapper
     def self.increment(date)
       date + 1
     end
@@ -13,7 +25,7 @@ module GraphMapper
     end
   end
 
-  class WeeklyMapper
+  class WeeklyMapper < DateMapper
     def self.increment(date)
       date + 7
     end
@@ -28,7 +40,7 @@ module GraphMapper
     end
   end
 
-  class MonthlyMapper
+  class MonthlyMapper < DateMapper
     def self.increment(date)
       date >> 1
     end
