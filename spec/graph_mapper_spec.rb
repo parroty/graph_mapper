@@ -112,14 +112,15 @@ describe "Mapper" do
       m.values.should == [0, 0, 0, 0]
     end
 
-    context "Options" do
-      before do
-        # register records in reverse order
-        create_stats([["2012/3/30", 10], ["2012/3/31", 20],
-                      ["2012/4/1", 30], ["2012/4/2", 40], ["2012/4/3", 50], ["2012/4/4", 60]].reverse)
+    context "Options - Moving Average" do
+      def create_stats_for_moving_average(is_reverse)
+        items = [["2012/3/30", 10], ["2012/3/31", 20],
+                ["2012/4/1", 30], ["2012/4/2", 40], ["2012/4/3", 50], ["2012/4/4", 60]]
+        items.reverse! if is_reverse
+        create_stats(items)
       end
 
-      it "should calc with moving average (success)" do
+      def calc_moving_average
         options = { :moving_average_length => 3 }
         m = GraphMapper::Mapper.new(Stat.all, "2012/4/1", "2012/4/5", options) do | record |
           hash_for_stats(record)
@@ -132,7 +133,18 @@ describe "Mapper" do
         m.moving_average.should == [20, 30, 40, 50]
       end
 
+      it "should calc with moving average (success - normal order records)" do
+        create_stats_for_moving_average(false)
+        calc_moving_average
+      end
+
+      it "should calc with moving average (success - reverse order records)" do
+        create_stats_for_moving_average(true)
+        calc_moving_average
+      end
+
       it "should calc with moving average (error)" do
+        create_stats_for_moving_average(false)
         m = GraphMapper::Mapper.new(Stat.all, "2012/4/1", "2012/4/5") do | record |
           hash_for_stats(record)
         end
