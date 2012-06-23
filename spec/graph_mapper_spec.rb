@@ -114,8 +114,9 @@ describe "Mapper" do
 
     context "Options" do
       before do
+        # register records in reverse order
         create_stats([["2012/3/30", 10], ["2012/3/31", 20],
-                      ["2012/4/1", 30], ["2012/4/2", 40], ["2012/4/3", 50], ["2012/4/4", 60]])
+                      ["2012/4/1", 30], ["2012/4/2", 40], ["2012/4/3", 50], ["2012/4/4", 60]].reverse)
       end
 
       it "should calc with moving average (success)" do
