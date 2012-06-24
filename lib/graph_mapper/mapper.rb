@@ -46,7 +46,7 @@ class Mapper
   end
 
   def average
-    calc_average(values())
+    calc_average(filter_leading_zeros(values()))
   end
 
   def variation
@@ -149,6 +149,11 @@ private
   def calc_average(items)
     total = items.inject(0) { |sum,value| sum + value }
     total.to_f / items.size
+  end
+
+  def filter_leading_zeros(items)
+    items.shift while items.first == 0
+    items
   end
 
 end # class
