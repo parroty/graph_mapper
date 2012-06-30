@@ -1,5 +1,6 @@
 require 'graph_mapper/mapper'
 require 'graph_mapper/category_mapper'
+require 'graph_mapper/grouping_mapper'
 require 'graph_mapper/dates'
 
 module GraphMapper
