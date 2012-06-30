@@ -21,6 +21,10 @@ class GroupingMapper
     @items.map { |key,val| val }
   end
 
+  def hash
+    @items
+  end
+
 private
   def accumulate_data_items(records, block)
     hash = Hash.new(0)
